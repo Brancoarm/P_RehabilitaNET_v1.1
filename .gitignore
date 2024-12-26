@@ -1,0 +1,8 @@
+# Node.js
+frontend/node_modules/          # Ignorar node_modules en frontend
+backend/node_modules/          # Ignorar node_modules en backend
+frontend/package-lock.json      # Ignorar package-lock.json en frontend
+frontend/package-lock.json      # Ignorar package-lock.json en backend
+# Archivos de configuración sensibles
+frontend/.env                   # Ignorar .env en frontend
+backend/.env                   # Ignorar .env en backend
