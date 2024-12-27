@@ -65,6 +65,41 @@ http://localhost:5000/api-docs
 
 ---
 
+## Uso de Swagger
+
+Swagger está disponible en la ruta:
+```
+http://localhost:5000/api-docs
+```
+
+### **Autenticación con token JWT**
+Para acceder a los endpoints protegidos, primero debes obtener un token JWT mediante el endpoint de login. Sigue estos pasos:
+
+1. Accede al botón del candado en el encabezado de Swagger.
+2. Ingresa el token en el siguiente formato:
+   ```
+Bearer <TU_TOKEN_JWT>
+```
+3. Presiona "Authorize" para autenticarte.
+
+### **Crear una orden de pago**
+1. Usa el endpoint **`POST /payments/create`**.
+2. Copia el valor de `approvalLink` en la respuesta JSON.
+3. Pega el enlace en tu navegador y aprueba el pago usando una cuenta de prueba de PayPal.
+
+### **Confirmar una orden de pago**
+1. Una vez aprobado el pago, copia el `orderId` devuelto por **`POST /payments/create`**.
+2. Usa el endpoint **`POST /payments/confirm`** con el siguiente cuerpo JSON:
+   ```json
+   {
+     "orderId": "<ID_DE_LA_ORDEN>",
+     "userId": "<ID_DEL_USUARIO>"
+   }
+   ```
+3. Si el pago es exitoso, recibirás un mensaje de confirmación.
+
+---
+
 ## Scripts disponibles
 
 - `npm run dev`: Inicia el servidor en modo desarrollo con `nodemon`
@@ -123,3 +158,5 @@ Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para má
 
 ## Contacto
 Si tienes preguntas o necesitas soporte, contacta al administrador del proyecto.
+
+---
