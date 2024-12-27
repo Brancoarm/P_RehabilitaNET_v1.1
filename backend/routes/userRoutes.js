@@ -1,12 +1,19 @@
 const express = require('express');
 const { getUserProfile, updateUser } = require('../controllers/userController');
 const authMiddleware = require('../middlewares/authMiddleware');
+const { body } = require('express-validator');
+
 const router = express.Router();
 
-// Ruta para obtener el perfil del usuario
-router.get('/profile', authMiddleware, getUserProfile);
+// Validaciones
+const validateUpdateProfile = [
+  body('name').optional().notEmpty().withMessage('El nombre no puede estar vacío'),
+  body('email').optional().isEmail().withMessage('Debe proporcionar un correo válido'),
+  body('phone').optional().isMobilePhone().withMessage('Debe proporcionar un número de teléfono válido'),
+];
 
-// Ruta para actualizar el perfil del usuario
-router.put('/profile', authMiddleware, updateUser);
+// Rutas
+router.get('/profile', authMiddleware, getUserProfile);
+router.put('/profile', authMiddleware, validateUpdateProfile, updateUser);
 
 module.exports = router;

@@ -1,375 +1,219 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "RehabilitaNET API",
-      "description": "API para manejar usuarios, planes y pagos en RehabilitaNET"
-    },
-    "host": "localhost:5000",
-    "basePath": "/api",
-    "schemes": ["http"],
-    "security": [
-      {
-        "BearerAuth": []
-      }
-    ],
-    "paths": {
-      "/auth/register": {
-        "post": {
-          "summary": "Registrar un usuario",
-          "description": "Permite registrar un nuevo usuario en el sistema.",
-          "parameters": [
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/RegisterUser"
-              }
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "RehabilitaNET API",
+    "description": "API para manejar usuarios, planes y pagos en RehabilitaNET"
+  },
+  "host": "localhost:5000",
+  "basePath": "/api",
+  "schemes": ["http"],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [{ "BearerAuth": [] }],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Registrar un usuario",
+        "description": "Permite registrar un nuevo usuario en el sistema.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterUser"
             }
-          ],
-          "responses": {
-            "201": { "description": "Usuario registrado con éxito" },
-            "400": { "description": "Error en el registro" }
           }
-        }
-      },
-      "/auth/login": {
-        "post": {
-          "summary": "Iniciar sesión",
-          "description": "Permite a un usuario iniciar sesión en el sistema.",
-          "parameters": [
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/LoginUser"
-              }
-            }
-          ],
-          "responses": {
-            "200": { "description": "Inicio de sesión exitoso" },
-            "401": { "description": "Credenciales inválidas" }
-          }
-        }
-      },
-      "/users/profile": {
-        "get": {
-          "summary": "Obtener perfil del usuario",
-          "description": "Obtiene la información del perfil del usuario autenticado.",
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "required": true,
-              "type": "string",
-              "description": "Token JWT del usuario"
-            }
-          ],
-          "responses": {
-            "200": { "description": "Perfil del usuario obtenido con éxito" },
-            "401": { "description": "No autenticado" }
-          }
-        },
-        "put": {
-          "summary": "Actualizar perfil del usuario",
-          "description": "Permite al usuario autenticado actualizar su información de perfil.",
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "required": true,
-              "type": "string",
-              "description": "Token JWT del usuario"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/UpdateUser"
-              }
-            }
-          ],
-          "responses": {
-            "200": { "description": "Perfil actualizado con éxito" },
-            "401": { "description": "No autenticado" }
-          }
-        }
-      },
-      "/plans": {
-        "get": {
-          "summary": "Obtener todos los planes",
-          "description": "Devuelve una lista de todos los planes disponibles.",
-          "responses": {
-            "200": { "description": "Planes obtenidos con éxito" },
-            "500": { "description": "Error interno del servidor" }
-          }
-        },
-        "post": {
-          "summary": "Crear un nuevo plan",
-          "description": "Permite a un administrador crear un nuevo plan.",
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "required": true,
-              "type": "string",
-              "description": "Token JWT del administrador"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/CreatePlan"
-              }
-            }
-          ],
-          "responses": {
-            "201": { "description": "Plan creado con éxito" },
-            "400": { "description": "Error en los datos proporcionados" },
-            "401": { "description": "No autenticado" },
-            "403": { "description": "No autorizado" }
-          }
-        }
-      },
-      "/plans/{id}": {
-        "get": {
-          "summary": "Obtener un plan por ID",
-          "description": "Devuelve los detalles de un plan específico.",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "type": "string",
-              "description": "ID del plan a consultar"
-            }
-          ],
-          "responses": {
-            "200": { "description": "Detalles del plan obtenidos con éxito" },
-            "404": { "description": "Plan no encontrado" }
-          }
-        },
-        "put": {
-          "summary": "Actualizar un plan",
-          "description": "Permite a un administrador actualizar un plan existente.",
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "required": true,
-              "type": "string",
-              "description": "Token JWT del administrador"
-            },
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "type": "string",
-              "description": "ID del plan a actualizar"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/UpdatePlan"
-              }
-            }
-          ],
-          "responses": {
-            "200": { "description": "Plan actualizado con éxito" },
-            "400": { "description": "Error en los datos proporcionados" },
-            "401": { "description": "No autenticado" },
-            "403": { "description": "No autorizado" }
-          }
-        },
-        "delete": {
-          "summary": "Eliminar un plan",
-          "description": "Permite a un administrador eliminar un plan existente.",
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "required": true,
-              "type": "string",
-              "description": "Token JWT del administrador"
-            },
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "type": "string",
-              "description": "ID del plan a eliminar"
-            }
-          ],
-          "responses": {
-            "200": { "description": "Plan eliminado con éxito" },
-            "404": { "description": "Plan no encontrado" },
-            "401": { "description": "No autenticado" },
-            "403": { "description": "No autorizado" }
-          }
-        }
-      },
-      "/payments/create": {
-        "post": {
-          "summary": "Crear un pago",
-          "description": "Genera un pago utilizando PayPal.",
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "required": true,
-              "type": "string",
-              "description": "Token JWT del usuario"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/CreatePayment"
-              }
-            }
-          ],
-          "responses": {
-            "201": { "description": "Pago creado con éxito" },
-            "401": { "description": "No autenticado" }
-          }
-        }
-      },
-      "/payments/confirm": {
-        "post": {
-          "summary": "Confirmar un pago",
-          "description": "Confirma el pago y actualiza el plan del usuario.",
-          "security": [
-            {
-              "BearerAuth": []
-            }
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "required": true,
-              "type": "string",
-              "description": "Token JWT del usuario"
-            },
-            {
-              "name": "body",
-              "in": "body",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/ConfirmPayment"
-              }
-            }
-          ],
-          "responses": {
-            "200": { "description": "Pago confirmado con éxito" },
-            "401": { "description": "No autenticado" }
-          }
+        ],
+        "responses": {
+          "201": { "description": "Usuario registrado con éxito" },
+          "400": { "description": "Error en el registro" }
         }
       }
     },
-    "definitions": {
-      "RegisterUser": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "rut": { "type": "string" },
-          "email": { "type": "string" },
-          "password": { "type": "string" }
-        },
-        "required": ["name", "rut", "email", "password"]
-      },
-      "LoginUser": {
-        "type": "object",
-        "properties": {
-          "rut": { "type": "string" },
-          "password": { "type": "string" }
-        },
-        "required": ["rut", "password"]
-      },
-      "UpdateUser": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "email": { "type": "string" }
+    "/auth/login": {
+      "post": {
+        "summary": "Iniciar sesión",
+        "description": "Permite a un usuario iniciar sesión en el sistema.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Inicio de sesión exitoso" },
+          "401": { "description": "Credenciales inválidas" }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "summary": "Obtener perfil del usuario",
+        "description": "Obtiene la información del perfil del usuario autenticado.",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Perfil del usuario obtenido con éxito" },
+          "401": { "description": "No autenticado" }
         }
       },
-      "CreatePlan": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "price": { "type": "number" },
-          "benefits": {
-            "type": "array",
-            "items": { "type": "string" }
+      "put": {
+        "summary": "Actualizar perfil del usuario",
+        "description": "Permite al usuario autenticado actualizar su información de perfil.",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateUser"
+            }
           }
-        },
-        "required": ["name", "description", "price", "benefits"]
-      },
-      "UpdatePlan": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "price": { "type": "number" },
-          "benefits": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
+        ],
+        "responses": {
+          "200": { "description": "Perfil actualizado con éxito" },
+          "401": { "description": "No autenticado" }
+        }
+      }
+    },
+    "/plans": {
+      "get": {
+        "summary": "Obtener todos los planes",
+        "description": "Devuelve una lista de todos los planes disponibles.",
+        "responses": {
+          "200": { "description": "Planes obtenidos con éxito" },
+          "500": { "description": "Error interno del servidor" }
         }
       },
-      "CreatePayment": {
-        "type": "object",
-        "properties": {
-          "plan": { "type": "string", "enum": ["Pro", "Elite"] }
-        },
-        "required": ["plan"]
-      },
-      "ConfirmPayment": {
-        "type": "object",
-        "properties": {
-          "orderId": { "type": "string" },
-          "userId": { "type": "string" }
-        },
-        "required": ["orderId", "userId"]
+      "post": {
+        "summary": "Crear un nuevo plan",
+        "description": "Permite a un administrador crear un nuevo plan.",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePlan"
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Plan creado con éxito" },
+          "400": { "description": "Error en los datos proporcionados" },
+          "401": { "description": "No autenticado" }
+        }
+      }
+    },
+    "/payments/create": {
+      "post": {
+        "summary": "Crear un pago",
+        "description": "Genera un pago utilizando PayPal.",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePayment"
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Pago creado con éxito" },
+          "401": { "description": "No autenticado" }
+        }
+      }
+    },
+    "/payments/confirm": {
+      "post": {
+        "summary": "Confirmar un pago",
+        "description": "Confirma el pago y actualiza el plan del usuario.",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfirmPayment"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Pago confirmado con éxito" },
+          "401": { "description": "No autenticado" }
+        }
       }
     }
+  },
+  "definitions": {
+    "RegisterUser": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "rut": { "type": "string" },
+        "email": { "type": "string" },
+        "password": { "type": "string" }
+      },
+      "required": ["name", "rut", "email", "password"]
+    },
+    "LoginUser": {
+      "type": "object",
+      "properties": {
+        "rut": { "type": "string" },
+        "password": { "type": "string" }
+      },
+      "required": ["rut", "password"]
+    },
+    "UpdateUser": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" }
+      }
+    },
+    "CreatePlan": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "benefits": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["name", "description", "price", "benefits"]
+    },
+    "CreatePayment": {
+      "type": "object",
+      "properties": {
+        "plan": { "type": "string", "enum": ["Pro", "Elite"] }
+      },
+      "required": ["plan"]
+    },
+    "ConfirmPayment": {
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["orderId", "userId"]
+    }
   }
-  
+}

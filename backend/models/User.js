@@ -40,12 +40,8 @@ const userSchema = new mongoose.Schema(
 
 // Método para comparar contraseñas
 userSchema.methods.matchPassword = async function (enteredPassword) {
-    console.log(`Contraseña ingresada: ${enteredPassword}`);
-    console.log(`Contraseña almacenada: ${this.password}`);
-    return await bcrypt.compare(enteredPassword, this.password);
-  };
-    
-
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 // Encriptar contraseña antes de guardar
 userSchema.pre('save', async function (next) {

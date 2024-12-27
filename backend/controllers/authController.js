@@ -1,67 +1,45 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const { generateToken } = require('../utils/jwtHelper');
+const User = require('../models/User');
 
-// Registrar usuario
+// Registro de usuario
 exports.register = async (req, res) => {
+  const { name, rut, email, password } = req.body;
   try {
-    const { name, rut, email, password } = req.body;
-
-    // Verificar si el usuario ya existe
     const existingUser = await User.findOne({ rut });
     if (existingUser) {
-      return res.status(400).json({ message: "El usuario ya existe" });
+      return res.status(400).json({ message: 'El usuario ya existe' });
     }
-
-    // Crear nuevo usuario (pre-hook manejará la encriptación)
     const newUser = await User.create({ name, rut, email, password });
-
     res.status(201).json({
-      message: "Usuario registrado con éxito",
+      message: 'Usuario registrado con éxito',
       user: { id: newUser._id, name: newUser.name, email: newUser.email },
     });
   } catch (error) {
-    console.error("Error en el proceso de registro:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+    res.status(500).json({ message: 'Error en el servidor', error: error.message });
   }
 };
 
-// Iniciar sesión
+// Inicio de sesión
 exports.login = async (req, res) => {
+  const { rut, password } = req.body;
   try {
-    const { rut, password } = req.body;
-
-    // Verificar si el usuario existe
     const user = await User.findOne({ rut });
     if (!user) {
-      console.warn("Usuario no encontrado:", rut);
-      return res.status(401).json({ message: "Usuario no encontrado" });
+      return res.status(401).json({ message: 'Credenciales inválidas' });
     }
-
-    // Comparar contraseñas utilizando matchPassword
-    const isMatch = await user.matchPassword(password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      console.warn("Credenciales inválidas para el usuario:", rut);
-      return res.status(401).json({ message: "Credenciales inválidas" });
+      return res.status(401).json({ message: 'Credenciales inválidas' });
     }
-
-    // Generar token
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
+    const token = generateToken({ id: user._id, role: user.role });
     res.status(200).json({
-      message: "Inicio de sesión exitoso",
-      user: {
-        id: user._id,
-        name: user.name,
-        rut: user.rut,
-        email: user.email,
-        role: user.role,
-      },
+      message: 'Inicio de sesión exitoso',
       token,
+      user: { id: user._id, name: user.name, role: user.role },
     });
   } catch (error) {
-    console.error("Error en el proceso de inicio de sesión:", error);
-    res.status(500).json({ message: "Error en el servidor" });
+    res.status(500).json({ message: 'Error en el servidor', error: error.message });
   }
 };

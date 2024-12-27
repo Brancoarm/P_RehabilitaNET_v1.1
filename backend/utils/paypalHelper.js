@@ -5,11 +5,6 @@ const environment = process.env.NODE_ENV === 'production'
 
 const client = new paypal.core.PayPalHttpClient(environment);
 
-/**
- * Crear una orden de pago
- * @param {Number} amount - Monto a pagar.
- * @returns {Object} - Detalles de la orden creada.
- */
 const createOrder = async (amount) => {
   const request = new paypal.orders.OrdersCreateRequest();
   request.prefer('return=representation');
@@ -17,16 +12,10 @@ const createOrder = async (amount) => {
     intent: 'CAPTURE',
     purchase_units: [{ amount: { currency_code: 'USD', value: amount } }],
   });
-
   const response = await client.execute(request);
   return response.result;
 };
 
-/**
- * Confirmar una orden de pago
- * @param {String} orderId - ID de la orden a confirmar.
- * @returns {Object} - Detalles de la orden confirmada.
- */
 const captureOrder = async (orderId) => {
   const request = new paypal.orders.OrdersCaptureRequest(orderId);
   request.requestBody({});
@@ -34,7 +23,4 @@ const captureOrder = async (orderId) => {
   return response.result;
 };
 
-module.exports = {
-  createOrder,
-  captureOrder,
-};
+module.exports = { createOrder, captureOrder };

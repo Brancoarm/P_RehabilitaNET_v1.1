@@ -6,7 +6,7 @@ exports.getUserProfile = async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Error en el servidor', error: error.message });
   }
 };
 
@@ -15,8 +15,8 @@ exports.updateUser = async (req, res) => {
   try {
     const updates = req.body;
     const user = await User.findByIdAndUpdate(req.user.id, updates, { new: true });
-    res.status(200).json(user);
+    res.status(200).json({ message: 'Perfil actualizado con éxito', user });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Error en el servidor', error: error.message });
   }
 };

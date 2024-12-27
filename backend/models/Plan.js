@@ -15,7 +15,7 @@ const planSchema = new mongoose.Schema({
     required: [true, 'El precio del plan es obligatorio'],
   },
   benefits: {
-    type: [String], // Lista de beneficios del plan
+    type: [String],
     required: [true, 'Los beneficios del plan son obligatorios'],
   },
 });
