@@ -87,7 +87,7 @@
         }
       }
     },
-    "/plans": {
+"/plans": {
       "get": {
         "summary": "Obtener todos los planes",
         "description": "Devuelve una lista de todos los planes disponibles.",
@@ -114,6 +114,73 @@
           "201": { "description": "Plan creado con éxito" },
           "400": { "description": "Error en los datos proporcionados" },
           "401": { "description": "No autenticado" }
+        }
+      }
+    },
+    "/plans/{id}": {
+      "get": {
+        "summary": "Obtener un plan por ID",
+        "description": "Devuelve los detalles de un plan específico.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID del plan"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Plan obtenido con éxito" },
+          "404": { "description": "Plan no encontrado" },
+          "500": { "description": "Error interno del servidor" }
+        }
+      },
+      "put": {
+        "summary": "Actualizar un plan",
+        "description": "Permite actualizar la información de un plan existente.",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID del plan"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePlan"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Plan actualizado con éxito" },
+          "400": { "description": "Error en los datos proporcionados" },
+          "404": { "description": "Plan no encontrado" },
+          "500": { "description": "Error interno del servidor" }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar un plan",
+        "description": "Permite eliminar un plan existente por su ID.",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID del plan"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Plan eliminado con éxito" },
+          "404": { "description": "Plan no encontrado" },
+          "500": { "description": "Error interno del servidor" }
         }
       }
     },

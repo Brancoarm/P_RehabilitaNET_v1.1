@@ -1,47 +1,34 @@
 import React from 'react';
-import PaymentButton from '../components/PaymentButton';
-import PlanSummary from '../components/PlanSummary';
+import Navbar from '../components/layout/Navbar';
+import PaymentButton from '../components/buttons/PaymentButton';
+import { createPayment } from '../services/payment';
 
-function CheckoutPage() {
-  const selectedPlan = {
-    name: 'Pro',
-    description: 'Plan profesional con acceso a múltiples servicios',
-    price: 50,
-  };
-
-  const handlePayment = (method) => {
-    console.log(`Iniciando pago con ${method} para:`, selectedPlan);
+const CheckoutPage = () => {
+  const handlePayment = async () => {
+    try {
+      const paymentData = {
+        amount: 50, // Ejemplo: monto del pago
+        description: 'Plan Premium',
+      };
+      const result = await createPayment(paymentData);
+      console.log('Pago procesado:', result);
+      alert('Pago exitoso. Gracias por tu compra.');
+    } catch (error) {
+      alert('Error al procesar el pago. Intenta nuevamente.');
+    }
   };
 
   return (
-    <div className="container mt-4">
-      <h1 className="text-center mb-4">Resumen de tu Compra</h1>
-      <div className="card mx-auto shadow" style={{ maxWidth: '500px' }}>
-        <div className="card-body">
-          <PlanSummary plan={selectedPlan} />
-          <PaymentButton
-            method="PayPal"
-            label={
-              <>
-                <img
-                  src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png"
-                  alt="PayPal"
-                  style={{ height: '24px' }}
-                />
-                Suscribirse
-              </>
-            }
-            onClick={() => handlePayment('PayPal')}
-          />
-          <PaymentButton
-            method="Credit/Debit"
-            label="Tarjeta de débito o crédito"
-            onClick={() => handlePayment('Credit/Debit')}
-          />
+    <div>
+      <Navbar />
+      <div className="container mt-4">
+        <h1 className="text-center">Finalizar Pago</h1>
+        <div className="text-center mt-4">
+          <PaymentButton onPaymentClick={handlePayment} />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default CheckoutPage;

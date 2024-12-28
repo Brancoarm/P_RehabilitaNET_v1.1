@@ -10,6 +10,23 @@ exports.getPlans = async (req, res) => {
   }
 };
 
+// Obtener el plan del usuario
+const getUserPlan = async (req, res) => {
+  try {
+    // Busca el plan asociado al usuario
+    const userPlan = await Plan.findOne({ name: req.user.plan }); // Busca por nombre o ID según tu implementación
+    if (!userPlan) {
+      return res.status(404).json({ message: 'Plan no encontrado' });
+    }
+
+    // Devuelve el plan completo
+    res.json(userPlan);
+  } catch (error) {
+    console.error('Error al obtener el plan del usuario:', error);
+    res.status(500).json({ message: 'Error al obtener el plan del usuario' });
+  }
+};
+
 // Crear un nuevo plan
 exports.createPlan = async (req, res) => {
   const { name, description, price, benefits } = req.body;

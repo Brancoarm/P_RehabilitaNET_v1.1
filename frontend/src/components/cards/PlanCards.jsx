@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PlanCards({ plans }) {
+const PlanCards = ({ plans }) => {
   return (
     <div className="row">
       {plans.map((plan) => (
@@ -9,7 +9,9 @@ function PlanCards({ plans }) {
             <div className="card-body">
               <h5 className="card-title">{plan.name}</h5>
               <p className="card-text">{plan.description}</p>
-              <p className="card-text"><strong>${plan.price}</strong></p>
+              <p className="card-text">
+                <strong>Precio: ${plan.price}</strong>
+              </p>
               <button className="btn btn-primary">Seleccionar</button>
             </div>
           </div>
@@ -17,6 +19,6 @@ function PlanCards({ plans }) {
       ))}
     </div>
   );
-}
+};
 
 export default PlanCards;

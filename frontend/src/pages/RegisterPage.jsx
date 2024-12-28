@@ -1,14 +1,28 @@
 import React from 'react';
-import RegisterForm from '../components/RegisterForm';
+import Navbar from '../components/layout/Navbar';
+import RegisterForm from '../components/forms/RegisterForm';
+import { registerUser } from '../services/auth';
 
-function RegisterPage() {
+const RegisterPage = () => {
+  const handleRegister = async (userData) => {
+    try {
+      const data = await registerUser(userData);
+      console.log('Usuario registrado:', data);
+      alert('Registro exitoso. Ahora puedes iniciar sesión.');
+    } catch (error) {
+      alert('Error al registrar. Por favor intenta nuevamente.');
+    }
+  };
+
   return (
-    <div className="container mt-4">
-      <h1>Registrar Cuenta</h1>
-      <p>Página para registrar una nueva cuenta.</p>
-      <RegisterForm />
+    <div>
+      <Navbar />
+      <div className="container mt-4">
+        <h1 className="text-center">Crear Cuenta</h1>
+        <RegisterForm onRegister={handleRegister} />
+      </div>
     </div>
   );
-}
+};
 
 export default RegisterPage;

@@ -1,67 +1,46 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import ProfilePage from './pages/ProfilePage';
 import PlansPage from './pages/PlansPage';
 import AdminPage from './pages/AdminPage';
+import ProfilePage from './pages/ProfilePage';
 import CheckoutPage from './pages/CheckoutPage';
+import ProtectedRoute from './components/navigation/ProtectedRoute';
+
 
 function App() {
-  const [auth, setAuth] = useState({ isAuthenticated: false, user: null });
-
   return (
     <Router>
-      <Navbar auth={auth} />
-      <div className="container mt-4">
-        <Routes>
-          <Route
-            path="/"
-            element={<HomePage />}
-          />
-          <Route
-            path="/login"
-            element={<LoginPage setAuth={setAuth} />}
-          />
-          <Route
-            path="/register"
-            element={<RegisterPage />}
-          />
-          <Route
-            path="/profile"
-            element={
-              auth.isAuthenticated ? (
-                <ProfilePage user={auth.user} />
-              ) : (
-                <LoginPage setAuth={setAuth} />
-              )
-            }
-          />
-          <Route
-            path="/plans"
-            element={<PlansPage />}
-          />
-          <Route
-            path="/admin"
-            element={
-              auth.user?.role === 'admin' ? (
-                <AdminPage />
-              ) : (
-                <p>No tienes acceso a esta página</p>
-              )
-            }
-          />
-          <Route
-            path="/checkout"
-            element={<CheckoutPage />}
-          />
-        </Routes>
-      </div>
+      <Routes>
+        {/* Rutas públicas */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/plans" element={<PlansPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+
+        {/* Rutas protegidas */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </Router>
   );
 }
 
 export default App;
+

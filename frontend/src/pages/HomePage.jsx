@@ -1,12 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Navbar from '../components/layout/Navbar';
+import PlanCards from '../components/cards/PlanCards';
+import { getPlans } from '../services/api';
 
-function HomePage() {
+const HomePage = () => {
+  const [plans, setPlans] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const data = await getPlans(); // Obtén los planes desde el backend
+        setPlans(data); // Actualiza el estado con los planes
+      } catch (err) {
+        setError('No se pudieron cargar los planes');
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
   return (
-    <div className="text-center mt-5">
-      <h1>Bienvenido a RehabilitaNET</h1>
-      <p>Gestiona tus planes y servicios con facilidad</p>
+    <div>
+      <Navbar />
+      <div className="container mt-4">
+        <h1 className="text-center">Bienvenido a RehabilitaNET</h1>
+        <p className="text-center">Explora nuestros planes y servicios</p>
+        {error ? (
+          <p className="text-danger text-center">{error}</p>
+        ) : (
+          <PlanCards plans={plans} />
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default HomePage;

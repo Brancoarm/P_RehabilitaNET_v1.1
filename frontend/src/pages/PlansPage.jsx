@@ -1,19 +1,36 @@
-import React from 'react';
-import PlanCards from '../components/PlanCards';
+import React, { useEffect, useState } from 'react';
+import PlanCards from '../components/cards/PlanCards';
+import { getPlans } from '../services/api';
 
-const plans = [
-  { id: 1, name: 'Free', description: 'Plan básico', price: 0 },
-  { id: 2, name: 'Pro', description: 'Plan profesional', price: 50 },
-  { id: 3, name: 'Elite', description: 'Plan completo', price: 90 },
-];
+const PlansPage = () => {
+  const [plans, setPlans] = useState([]);
+  const [error, setError] = useState(null);
 
-function PlansPage() {
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const data = await getPlans();
+        const filteredPlans = data.filter((plan) => plan.name.toLowerCase() !== 'free'); // Excluye el plan "Free"
+        setPlans(filteredPlans);
+      } catch (err) {
+        setError('No se pudieron cargar los planes.');
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
   return (
     <div className="container mt-4">
-      <h1 className="text-center mb-4">Nuestros Planes</h1>
-      <PlanCards plans={plans} />
+      <h1 className="text-center">Nuestros Planes</h1>
+      <p className="text-center">Selecciona el plan que mejor se adapte a tus necesidades.</p>
+      {error ? (
+        <p className="text-danger text-center">{error}</p>
+      ) : (
+        <PlanCards plans={plans} />
+      )}
     </div>
   );
-}
+};
 
 export default PlansPage;
