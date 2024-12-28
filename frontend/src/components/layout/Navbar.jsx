@@ -6,6 +6,7 @@ const Navbar = () => {
   const [userName, setUserName] = useState('');
   const [userPlan, setUserPlan] = useState('');
   const [userRole, setUserRole] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -14,8 +15,10 @@ const Navbar = () => {
         setUserName(data.name); // Asignamos el nombre del usuario
         setUserPlan(data.plan); // Asignamos el nombre del plan
         setUserRole(data.role); // Asignamos el rol del usuario
+        setIsLoggedIn(true); // Usuario está logeado
       } catch (error) {
         console.error('Error al obtener el perfil del usuario:', error);
+        setIsLoggedIn(false); // Usuario no está logeado
       }
     };
 
@@ -46,8 +49,24 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+            {/* Mostrar opciones si el usuario no está logeado */}
+            {!isLoggedIn && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">
+                    Iniciar sesión
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/register">
+                    Registrarse
+                  </Link>
+                </li>
+              </>
+            )}
+
             {/* Mostrar opciones dependiendo del rol */}
-            {userRole === 'admin' && (
+            {isLoggedIn && userRole === 'admin' && (
               <>
                 <li className="nav-item">
                   <Link className="nav-link" to="/admin">
@@ -61,16 +80,24 @@ const Navbar = () => {
                 </li>
               </>
             )}
-            {userRole !== 'admin' && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/profile">
-                  Perfil
-                </Link>
-              </li>
+
+            {isLoggedIn && userRole === 'user' && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/">
+                    Inicio
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/profile">
+                    Perfil
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
           <div className="ms-3">
-            {userName ? (
+            {isLoggedIn ? (
               <>
                 <span>
                   Bienvenido, <strong>{userName}</strong> ({userPlan})
@@ -79,11 +106,7 @@ const Navbar = () => {
                   Cerrar sesión
                 </button>
               </>
-            ) : (
-              <Link className="btn btn-primary" to="/login">
-                Iniciar sesión
-              </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

@@ -96,4 +96,14 @@ export const updateProfile = async ( profileData) => {
   }
 };
 
+export const confirmPayment = async ({ orderId, userId }) => {
+  try {
+    const response = await api.post('/payments/confirm', { orderId, userId });
+    return response.data;
+  } catch (error) {
+    console.error('Error al confirmar el pago:', error);
+    throw error;
+  }
+};
+
 export default api;

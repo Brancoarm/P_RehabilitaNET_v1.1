@@ -1,6 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const PlanCards = ({ plans }) => {
+  const navigate = useNavigate();
+
+  const handleSelectPlan = (plan) => {
+    navigate('/checkout', { state: { plan } }); // Pasar el plan como estado
+  };
+
   return (
     <div className="row">
       {plans.map((plan) => (
@@ -12,7 +19,12 @@ const PlanCards = ({ plans }) => {
               <p className="card-text">
                 <strong>Precio: ${plan.price}</strong>
               </p>
-              <button className="btn btn-primary">Seleccionar</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => handleSelectPlan(plan)}
+              >
+                Seleccionar
+              </button>
             </div>
           </div>
         </div>
